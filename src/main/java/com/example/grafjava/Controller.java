@@ -2,8 +2,14 @@ package com.example.grafjava;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -22,6 +28,12 @@ public class Controller {
     TextField maxWeigth;
     @FXML
     Label pathToFile;
+    @FXML
+    ScrollPane graphPane;
+
+    GridPane nodes;
+    Graph graph;
+
     public void gen(ActionEvent e){
         int c = 6, w = 10;
         double min = 0,  max = 1;
@@ -38,15 +50,22 @@ public class Controller {
             massages.setText("Nieprawidłowe wagi");
         }
         //wywoluje generacje graf
+        graph = new Graph(w, c);
+        Generation.generate(graph, min, max);
+        graph.printGraph();
+        showGraph(w, c);
     }
+
     public void bfs(ActionEvent e){
         //wywoluje bfs
         massages.setText("Uruchamiam BFS");
     }
+
     public void dijsktra(ActionEvent e){
         //wywoluje dijkstre
         massages.setText("Uruchamiam Dijkstre");
     }
+
     public void save(ActionEvent e){
         String path;
         FileChooser fileChooser = new FileChooser();
@@ -57,6 +76,7 @@ public class Controller {
         }
         massages.setText("Zapisuje graf");
     }
+
     public void select(ActionEvent e){
         //wywoluje wybiweranie
         String path;
@@ -69,6 +89,41 @@ public class Controller {
         }
 
 
+    }
+
+    public void showGraph(int rows, int cols) {
+        nodes = new GridPane();
+        nodes.setVgap(5);
+        nodes.setHgap(5);
+        nodes.setPadding(new Insets(10, 10, 10, 10));
+
+        /*for (int i = 0; i < rows; i++) {
+            nodes.getRowConstraints().add(new RowConstraints());
+        }
+
+        for (int i = 0; i < cols; i++) {
+            nodes.getColumnConstraints().add(new ColumnConstraints());
+        }*/
+
+        Button[] buttons = new Button[rows * cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                int index = cols * i + j;
+                buttons[index] = new Button(String.valueOf(index));
+                buttons[index].setOnAction(this::test);
+                buttons[index].setId("node");
+                nodes.add(buttons[index], j, i);
+            }
+        }
+        graphPane.setContent(nodes);
+    }
+
+    public void test(ActionEvent e) {
+        // Wypisuje się każde połączenie z wierzchołka na który kliknęliśmy na konsolę
+        for (Edge edge: graph.neighbours[Integer.parseInt(((Button)e.getSource()).getText())]) {
+            System.out.print(edge.node + ": " + edge.wage + " ");
+        }
+        System.out.println();
     }
 
 }
