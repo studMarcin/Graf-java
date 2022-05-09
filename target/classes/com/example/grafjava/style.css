@@ -1,0 +1,11 @@
+#node {
+    -fx-background-color: #28B463;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-background-radius: 25px;
+    -fx-background-size: 150, 150;
+}
+
+#node:hover {
+    -fx-background-color: #196F3D;
+}

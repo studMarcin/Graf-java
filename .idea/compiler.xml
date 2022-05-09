@@ -15,7 +15,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="Grafjava" options="--add-exports java.xml/jdk.xml.internal=com.example.grafjava" />
+      <module name="Grafjava" options="" />
     </option>
   </component>
 </project>
