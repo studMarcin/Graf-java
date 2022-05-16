@@ -94,13 +94,12 @@ public class Controller {
         //wywoluje wybiweranie
         FileChooser fileChooser = new FileChooser();
         Files f = new Files();
-        Graph g = null;
         try {
             File selectedFile = fileChooser.showOpenDialog(null);
             pathToFile.setText(selectedFile.getPath());
-            g = f.read(selectedFile.getPath());
-            g.printGraph();
-            showGraph(g.rows, g.cols);
+            graph = f.read(selectedFile.getPath());
+            graph.printGraph();
+            showGraph(graph.rows, graph.cols);
             massages.setText("");
         }catch(InputMismatchException er){
             massages.setText("Nieprawidłowy format grafu");
