@@ -2,21 +2,26 @@ package com.example.grafjava;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
+import java.util.ArrayList;
+
 
 public class Controller {
 
@@ -33,7 +38,9 @@ public class Controller {
     @FXML
     Label pathToFile;
     @FXML
-    ScrollPane graphPane;
+    AnchorPane graphPane;
+    @FXML
+    Slider cohesionSlider;
 
     GridPane nodes;
     Graph graph;
@@ -41,6 +48,7 @@ public class Controller {
     public void gen(ActionEvent e){
         int c = 6, w = 10;
         double min = 0,  max = 1;
+        double cohesionLevel = cohesionSlider.getValue();
         try {
             c = Integer.parseInt(columnsNum.getText());
             w = Integer.parseInt(rowsNum.getText());
@@ -55,8 +63,8 @@ public class Controller {
         }
         //wywoluje generacje graf
         graph = new Graph(w, c);
-        Generation.generate(graph, min, max);
-        graph.printGraph();
+        Generation.generate(graph, min, max, cohesionLevel);
+        //graph.printGraph();
         showGraph(w, c);
     }
 
@@ -103,35 +111,50 @@ public class Controller {
     }
 
     public void showGraph(int rows, int cols) {
+        graphPane.getChildren().remove(nodes);
         nodes = new GridPane();
-        nodes.setVgap(5);
-        nodes.setHgap(5);
-        nodes.setPadding(new Insets(10, 10, 10, 10));
 
-        /*for (int i = 0; i < rows; i++) {
-            nodes.getRowConstraints().add(new RowConstraints());
+        double buttonSize;
+
+        if (cols > rows) {
+            buttonSize = graphPane.getMaxWidth() / (2 * cols - 1);
+        }
+        else {
+            buttonSize = graphPane.getMaxHeight() / (2 * rows - 1);
         }
 
-        for (int i = 0; i < cols; i++) {
-            nodes.getColumnConstraints().add(new ColumnConstraints());
-        }*/
+        double edgeWidth = buttonSize / 10;
+        int index = 0;
 
-        Button[] buttons = new Button[rows * cols];
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                int index = cols * i + j;
-                buttons[index] = new Button(String.valueOf(index));
+        Node[] buttons = new Node[rows * cols];
+
+        for (int i = 0; i < rows * 2 - 1; i += 2) {
+            for (int j = 0; j < cols * 2 - 1; j += 2) {
+                buttons[index] = new Node(buttonSize, index);
                 buttons[index].setOnAction(this::test);
                 buttons[index].setId("node");
                 nodes.add(buttons[index], j, i);
+                for (Edge edge: graph.neighbours[index]) {
+                    if (edge.node == index + 1) {
+                        edge.setSize(buttonSize, edgeWidth);
+                        nodes.add(edge, j + 1, i);
+                        GridPane.setValignment(edge, VPos.CENTER);
+                    }
+                    else if (edge.node == index + cols) {
+                        edge.setSize(edgeWidth, buttonSize);
+                        nodes.add(edge, j, i + 1);
+                        GridPane.setHalignment(edge, HPos.CENTER);
+                    }
+                }
+                index++;
             }
         }
-        graphPane.setContent(nodes);
+        graphPane.getChildren().addAll(nodes);
     }
 
     public void test(ActionEvent e) {
         // Wypisuje się każde połączenie z wierzchołka na który kliknęliśmy na konsolę
-        for (Edge edge: graph.neighbours[Integer.parseInt(((Button)e.getSource()).getText())]) {
+        for (Edge edge: graph.neighbours[((Node)e.getSource()).number]) {
             System.out.print(edge.node + ": " + edge.wage + " ");
         }
         System.out.println();
