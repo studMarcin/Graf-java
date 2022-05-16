@@ -13,6 +13,10 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 
 public class Controller {
 
@@ -67,11 +71,12 @@ public class Controller {
     }
 
     public void save(ActionEvent e){
-        String path;
         FileChooser fileChooser = new FileChooser();
+        Files f = new Files();
         try {
             File selectedFile = fileChooser.showOpenDialog(null);
-        }catch(RuntimeException er){
+            f.save(graph, selectedFile.getPath());
+        }catch(IOException er){
             massages.setText("Wybierz plik na zapis");
         }
         massages.setText("Zapisuje graf");
@@ -79,15 +84,21 @@ public class Controller {
 
     public void select(ActionEvent e){
         //wywoluje wybiweranie
-        String path;
         FileChooser fileChooser = new FileChooser();
+        Files f = new Files();
+        Graph g = null;
         try {
             File selectedFile = fileChooser.showOpenDialog(null);
             pathToFile.setText(selectedFile.getPath());
-        }catch(RuntimeException er){
+            g = f.read(selectedFile.getPath());
+            g.printGraph();
+            showGraph(g.rows, g.cols);
+            massages.setText("");
+        }catch(InputMismatchException er){
+            massages.setText("Nieprawidłowy format grafu");
+        }catch(FileNotFoundException er){
             massages.setText("Wybierz plik z grafem");
         }
-
 
     }
 
