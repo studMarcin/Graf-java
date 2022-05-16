@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Files {
-    //TODO integracja tego syfu z GUI
     public Graph read(String filename) throws FileNotFoundException, InputMismatchException, NoSuchElementException {
         int r, c;
         File f = new File(filename);
