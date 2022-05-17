@@ -7,7 +7,6 @@ public class Edge extends Label {
 
     int node;
     double wage;
-
     Edge (int node, double wage) {
         this.node = node;
         this.wage = wage;
@@ -19,5 +18,8 @@ public class Edge extends Label {
         this.setPrefSize(length, width);
         this.setMaxSize(length, width);
         this.setMinSize(length, width);
+    }
+    public String setColor(int w){
+        return "ala";
     }
 }

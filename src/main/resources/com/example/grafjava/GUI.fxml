@@ -2,68 +2,54 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.grafjava.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="864.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.grafjava.Controller">
    <children>
-      <TextField fx:id="columnsNum" layoutX="58.0" layoutY="72.0" prefHeight="35.0" prefWidth="79.0" promptText="6" />
-      <TextField fx:id="rowsNum" layoutX="187.0" layoutY="72.0" prefHeight="35.0" prefWidth="79.0" promptText="10" />
-      <Label layoutX="114.0" layoutY="18.0" text="Wymiary">
+      <TextField fx:id="columnsNum" layoutX="54.0" layoutY="40.0" prefHeight="25.0" prefWidth="34.0" promptText="6" />
+      <TextField fx:id="rowsNum" layoutX="123.0" layoutY="40.0" prefHeight="26.0" prefWidth="34.0" promptText="10" />
+      <Label layoutX="71.0" layoutY="14.0" text="Wymiary">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="100.0" layoutY="39.0" text="X">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="210.0" layoutY="14.0" text="Wagi">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="227.0" layoutY="39.0" text="-">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="minWeigth" layoutX="183.0" layoutY="41.0" prefHeight="26.0" prefWidth="34.0" promptText="0" />
+      <TextField fx:id="maxWeigth" layoutX="252.0" layoutY="41.0" prefHeight="26.0" prefWidth="34.0" promptText="1" />
+      <Button fx:id="genButton" layoutX="468.0" layoutY="18.0" mnemonicParsing="false" onAction="#gen" prefHeight="27.0" prefWidth="70.0" text="Generuj" />
+      <Button fx:id="bfsButton" layoutX="468.0" layoutY="71.0" mnemonicParsing="false" onAction="#bfs" prefHeight="27.0" prefWidth="70.0" text="BFS" />
+      <Button fx:id="dijkstraButton" layoutX="572.0" layoutY="18.0" mnemonicParsing="false" onAction="#dijsktra" prefHeight="27.0" prefWidth="70.0" text="Dijkstra" />
+      <Button fx:id="saveButton" layoutX="572.0" layoutY="71.0" mnemonicParsing="false" onAction="#save" prefHeight="27.0" prefWidth="70.0" text="Zapisz" />
+      <Button layoutX="53.0" layoutY="76.0" mnemonicParsing="false" onAction="#select" prefHeight="27.0" prefWidth="70.0" text="Wybierz" />
+      <Label fx:id="pathToFile" layoutX="123.0" layoutY="76.0" prefHeight="27.0" prefWidth="301.0" style="-fx-background-color: #dedede;" />
+      <Label fx:id="massages" layoutX="71.0" layoutY="124.0" prefHeight="50.0" prefWidth="560.0" style="-fx-background-color: #dedede;" text="Komunikaty" textAlignment="CENTER">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="153.0" layoutY="72.0" text="X">
+      <Label layoutX="307.0" layoutY="14.0" prefHeight="27.0" prefWidth="149.0" text="Poziom spójności grafu">
          <font>
-            <Font size="24.0" />
+            <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="389.0" layoutY="18.0" text="Wagi">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-      <Label layoutX="407.0" layoutY="72.0" text="-">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-      <TextField fx:id="minWeigth" layoutX="310.0" layoutY="72.0" prefHeight="35.0" prefWidth="79.0" promptText="0" />
-      <TextField fx:id="maxWeigth" layoutX="444.0" layoutY="72.0" prefHeight="35.0" prefWidth="79.0" promptText="1" />
-      <Button fx:id="genButton" layoutX="579.0" layoutY="18.0" mnemonicParsing="false" onAction="#gen" prefHeight="35.0" prefWidth="79.0" text="Generuj">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Button>
-      <Button fx:id="bfsButton" layoutX="690.0" layoutY="18.0" mnemonicParsing="false" onAction="#bfs" prefHeight="35.0" prefWidth="79.0" text="BFS">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Button>
-      <Button fx:id="dijkstraButton" layoutX="803.0" layoutY="18.0" mnemonicParsing="false" onAction="#dijsktra" prefHeight="35.0" prefWidth="79.0" text="Dijkstra">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Button>
-      <Button fx:id="saveButton" layoutX="911.0" layoutY="18.0" mnemonicParsing="false" onAction="#save" prefHeight="35.0" prefWidth="79.0" text="Zapisz">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Button>
-      <Button layoutX="579.0" layoutY="72.0" mnemonicParsing="false" onAction="#select" prefHeight="35.0" prefWidth="79.0" text="Wybierz">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Button>
-      <Label fx:id="pathToFile" layoutX="668.0" layoutY="72.0" prefHeight="35.0" prefWidth="322.0" style="-fx-background-color: #dedede;" />
-      <Label fx:id="massages" layoutX="71.0" layoutY="160.0" prefHeight="57.0" prefWidth="882.0" style="-fx-background-color: #dedede;" text="Komunikaty" textAlignment="CENTER">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-      <ScrollPane fx:id="graphPane" layoutX="67.0" layoutY="275.0" prefHeight="690.0" prefWidth="882.0" />
+      <Slider fx:id="cohesionSlider" blockIncrement="0.01" layoutX="307.0" layoutY="45.0" max="1.0" value="1.0" />
+      <AnchorPane fx:id="graphPane" layoutX="71.0" layoutY="195.0" maxHeight="560.0" maxWidth="560.0" prefHeight="560.0" prefWidth="560.0" />
    </children>
 </AnchorPane>
