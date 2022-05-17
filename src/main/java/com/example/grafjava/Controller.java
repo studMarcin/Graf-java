@@ -44,6 +44,11 @@ public class Controller {
 
     GridPane nodes;
     Graph graph;
+    Node[] buttons;
+
+    // Roboczo 0 - nic, 1 - dijsktra, 2 - BFS
+    int algorithm;
+
 
     public void gen(ActionEvent e){
         int c = 6, w = 10;
@@ -64,7 +69,7 @@ public class Controller {
         //wywoluje generacje graf
         graph = new Graph(w, c);
         Generation.generate(graph, min, max, cohesionLevel);
-        //graph.printGraph();
+        graph.printGraph();
         showGraph(w, c);
     }
 
@@ -75,7 +80,8 @@ public class Controller {
 
     public void dijsktra(ActionEvent e){
         //wywoluje dijkstre
-        massages.setText("Uruchamiam Dijkstre");
+        massages.setText("Wybierz wierzchołek początkowy");
+        algorithm = 1;
     }
 
     public void save(ActionEvent e){
@@ -125,7 +131,7 @@ public class Controller {
         double edgeWidth = buttonSize / 10;
         int index = 0;
 
-        Node[] buttons = new Node[rows * cols];
+        buttons = new Node[rows * cols];
 
         for (int i = 0; i < rows * 2 - 1; i += 2) {
             for (int j = 0; j < cols * 2 - 1; j += 2) {
@@ -157,6 +163,14 @@ public class Controller {
             System.out.print(edge.node + ": " + edge.wage + " ");
         }
         System.out.println();
+
+        graph.chosen = ((Node)e.getSource()).number;
+
+        if (algorithm == 1) {
+            Dijsktra dijkstra = new Dijsktra();
+            dijkstra.dijsktra(graph, buttons);
+            algorithm = 0;
+        }
     }
 
 }
