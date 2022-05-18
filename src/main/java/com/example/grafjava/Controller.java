@@ -3,19 +3,15 @@ package com.example.grafjava;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.util.ArrayList;
 
 public class Controller {
 
@@ -42,7 +38,7 @@ public class Controller {
 
     // Roboczo 0 - nic, 1 - dijsktra, 2 - BFS
     int algorithm;
-
+    Dijkstra dijkstra;
 
     public void gen(ActionEvent e){
         int c = 6, w = 10;
@@ -76,6 +72,7 @@ public class Controller {
         //wywoluje dijkstre
         massages.setText("Wybierz wierzchołek początkowy");
         algorithm = 1;
+        clearGraph();
     }
 
     public void save(ActionEvent e){
@@ -106,6 +103,7 @@ public class Controller {
     public void showGraph(int rows, int cols) {
         graphPane.getChildren().remove(nodes);
         nodes = new GridPane();
+        nodes.setMaxSize(560, 560);
 
         double buttonSize;
 
@@ -145,6 +143,18 @@ public class Controller {
         graphPane.getChildren().addAll(nodes);
     }
 
+    private void clearGraph() {
+        for (int i = 0; i < graph.getSize(); i++) {
+            for (Edge edge: graph.neighbours[i]) {
+                edge.setId("edge");
+            }
+        }
+
+        for (Node node: buttons) {
+            node.setId("Node");
+        }
+    }
+
     public void test(ActionEvent e) {
         // Wypisuje się każde połączenie z wierzchołka na który kliknęliśmy na konsolę
         for (Edge edge: graph.neighbours[((Node)e.getSource()).number]) {
@@ -152,12 +162,17 @@ public class Controller {
         }
         System.out.println();
 
-        graph.chosen = ((Node)e.getSource()).number;
-
         if (algorithm == 1) {
-            Dijsktra dijkstra = new Dijsktra();
-            dijkstra.dijsktra(graph, buttons);
-            algorithm = 0;
+            dijkstra = new Dijkstra();
+            algorithm = 2;
+            graph.chosen = ((Node)e.getSource()).number;
+            ((Node)e.getSource()).setId("chosen");
+            dijkstra.dijkstra(graph, buttons);
+            return;
+        }
+
+        if (algorithm == 2) {
+            dijkstra.showPath(graph, (Node)e.getSource());
         }
     }
 

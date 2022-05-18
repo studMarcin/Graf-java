@@ -2,11 +2,11 @@ package com.example.grafjava;
 
 import javafx.scene.control.Button;
 
-public class Node extends Button {
+public class Node extends Button implements Comparable<Node>{
 
     int number;
     double distance;
-    int prev;
+    Node prev;
 
     Node(double size, int number) {
         this.setPrefSize(size, size);
@@ -14,6 +14,11 @@ public class Node extends Button {
         this.setMinSize(size, size);
         this.number = number;
         distance = Double.POSITIVE_INFINITY;
-        prev = -1;
+        prev = null;
+    }
+
+    @Override
+    public int compareTo(Node o) {
+        return o.distance > distance ? 0 : 1;
     }
 }
