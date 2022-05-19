@@ -3,18 +3,23 @@ package com.example.grafjava;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.InputMismatchException;
+import java.util.ArrayList;
+
 
 public class Controller {
 
@@ -37,11 +42,6 @@ public class Controller {
 
     GridPane nodes;
     Graph graph;
-    Node[] buttons;
-
-    // Roboczo 0 - nic, 1 - dijsktra, 2 - BFS
-    int algorithm;
-    Dijkstra dijkstra;
 
     public void gen(ActionEvent e){
         int c = 6, w = 10;
@@ -62,7 +62,7 @@ public class Controller {
         //wywoluje generacje graf
         graph = new Graph(w, c);
         Generation.generate(graph, min, max, cohesionLevel);
-        graph.printGraph();
+        //graph.printGraph();
         showGraph(w, c);
     }
 
@@ -73,9 +73,7 @@ public class Controller {
 
     public void dijsktra(ActionEvent e){
         //wywoluje dijkstre
-        massages.setText("Wybierz wierzchołek początkowy");
-        algorithm = 1;
-        clearGraph();
+        massages.setText("Uruchamiam Dijkstre");
     }
 
     public void save(ActionEvent e){
@@ -113,7 +111,6 @@ public class Controller {
     public void showGraph(int rows, int cols) {
         graphPane.getChildren().remove(nodes);
         nodes = new GridPane();
-        nodes.setMaxSize(560, 560);
 
         double buttonSize;
 
@@ -127,7 +124,7 @@ public class Controller {
         double edgeWidth = buttonSize / 10;
         int index = 0;
 
-        buttons = new Node[rows * cols];
+        Node[] buttons = new Node[rows * cols];
 
         for (int i = 0; i < rows * 2 - 1; i += 2) {
             for (int j = 0; j < cols * 2 - 1; j += 2) {
@@ -153,37 +150,12 @@ public class Controller {
         graphPane.getChildren().addAll(nodes);
     }
 
-    private void clearGraph() {
-        for (int i = 0; i < graph.getSize(); i++) {
-            for (Edge edge: graph.neighbours[i]) {
-                edge.setId("edge");
-            }
-        }
-
-        for (Node node: buttons) {
-            node.setId("Node");
-        }
-    }
-
     public void test(ActionEvent e) {
         // Wypisuje się każde połączenie z wierzchołka na który kliknęliśmy na konsolę
         for (Edge edge: graph.neighbours[((Node)e.getSource()).number]) {
             System.out.print(edge.node + ": " + edge.wage + " ");
         }
         System.out.println();
-
-        if (algorithm == 1) {
-            dijkstra = new Dijkstra();
-            algorithm = 2;
-            graph.chosen = ((Node)e.getSource()).number;
-            ((Node)e.getSource()).setId("chosen");
-            dijkstra.dijkstra(graph, buttons);
-            return;
-        }
-
-        if (algorithm == 2) {
-            dijkstra.showPath(graph, (Node)e.getSource());
-        }
     }
 
 }
