@@ -7,6 +7,7 @@ public class Graph {
 
     LinkedList<Edge>[] neighbours;
     int rows, cols;
+    int chosen;
 
     Graph(int rows, int cols) {
         neighbours = new LinkedList[rows * cols];
@@ -24,5 +25,9 @@ public class Graph {
             }
             System.out.println();
         }
+    }
+
+    public int getSize() {
+        return cols * rows;
     }
 }
