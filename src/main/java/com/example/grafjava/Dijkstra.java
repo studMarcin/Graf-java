@@ -4,7 +4,7 @@ import java.util.PriorityQueue;
 
 public class Dijkstra {
 
-    public void dijkstra(Graph graph, Node[] buttons) {
+    public double dijkstra(Graph graph, Node[] buttons) {
         int size = graph.cols * graph.rows;
 
         PriorityQueue<Node> priorityQueue = new PriorityQueue<>(size);
@@ -36,7 +36,8 @@ public class Dijkstra {
             //System.out.println(node.prev);
         }
 
-
+        // Do testów
+        return buttons[size - 1].distance;
     }
 
     public void showPath(Graph graph, Node start) {

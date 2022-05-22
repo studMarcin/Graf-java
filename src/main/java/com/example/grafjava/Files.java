@@ -32,8 +32,7 @@ public class Files {
 
             if(pom.length() != 0) {
                 for (int j = 0; j<edges_num; j++) {
-                    Edge e = null;
-                    e = new Edge(linereader.nextInt(),linereader.nextDouble());
+                    Edge e = new Edge(linereader.nextInt(),linereader.nextDouble());
                     g.neighbours[i].add(e);
                 }
             }
