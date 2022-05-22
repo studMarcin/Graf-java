@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 public class Graph {
 
-    LinkedList<Edge>[] neighbours;
+    LinkedList<GraphEdge>[] neighbours;
     int rows, cols;
     int chosen;
 
@@ -19,8 +19,8 @@ public class Graph {
     }
 
     public void printGraph() {
-        for (LinkedList<Edge> row: neighbours) {
-            for (Edge edge: row) {
+        for (LinkedList<GraphEdge> row: neighbours) {
+            for (GraphEdge edge: row) {
                 System.out.print(edge.node + ": " + edge.wage + " ");
             }
             System.out.println();

@@ -11,20 +11,20 @@ public class Generation {
 
         Random rand = new Random();
 
-        for (LinkedList<Edge> row: graph.neighbours) {
+        for (LinkedList<GraphEdge> row: graph.neighbours) {
             if (rand.nextDouble() < cohesionLevel) {
                 if ((currNode + 1) % graph.cols != 0) {
                     wage = rand.nextDouble() * (maxW - minW) + minW;
-                    row.addLast(new Edge(currNode + 1, wage));
-                    graph.neighbours[currNode + 1].addLast(new Edge(currNode, wage));
+                    row.addLast(new GraphEdge(currNode + 1, wage));
+                    graph.neighbours[currNode + 1].addLast(new GraphEdge(currNode, wage));
                 }
             }
 
             if (rand.nextDouble() < cohesionLevel) {
                 if (currNode < graph.cols * (graph.rows - 1)) {
                     wage = rand.nextDouble() * (maxW - minW) + minW;
-                    row.addLast(new Edge(currNode + graph.cols, wage));
-                    graph.neighbours[currNode + graph.cols].addLast(new Edge(currNode, wage));
+                    row.addLast(new GraphEdge(currNode + graph.cols, wage));
+                    graph.neighbours[currNode + graph.cols].addLast(new GraphEdge(currNode, wage));
                 }
             }
             currNode++;

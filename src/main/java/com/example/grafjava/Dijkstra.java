@@ -1,65 +1,76 @@
 package com.example.grafjava;
 
+import javafx.scene.layout.GridPane;
+
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 
 public class Dijkstra {
 
-    public double dijkstra(Graph graph, Node[] buttons) {
-        int size = graph.cols * graph.rows;
+    static double[] distance;
+    static int[] parents;
 
-        PriorityQueue<Node> priorityQueue = new PriorityQueue<>(size);
+    static class Cmp implements Comparator<Integer> {
+
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return Double.compare(distance[o1], distance[o2]);
+        }
+    }
+
+    public static double[] dijkstra(Graph graph) {
+        int size = graph.cols * graph.rows;
+        distance = new double[size];
+        parents = new int[size];
+
+        Cmp cmp = new Cmp();
+
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(size, cmp);
 
         for (int i = 0; i < size; i++) {
-            buttons[i].distance = Double.POSITIVE_INFINITY;
-            buttons[i].prev = null;
+            distance[i] = Double.POSITIVE_INFINITY;
+            parents[i] = -1;
         }
 
-        buttons[graph.chosen].distance = 0.0;
-        priorityQueue.add(buttons[graph.chosen]);
+        distance[graph.chosen] = 0.0;
+        priorityQueue.add(graph.chosen);
 
-        Node u;
+        int u;
 
         while(!priorityQueue.isEmpty()) {
 
             u = priorityQueue.poll();
-            for (Edge edge: graph.neighbours[u.number]) {
-                if (buttons[edge.node].distance > u.distance + edge.wage) {
-                    buttons[edge.node].distance = u.distance + edge.wage;
-                    buttons[edge.node].prev = u;
-                    priorityQueue.add(buttons[edge.node]);
+            for (GraphEdge edge: graph.neighbours[u]) {
+                if (distance[edge.node] > distance[u] + edge.wage) {
+                    distance[edge.node] = distance[u] + edge.wage;
+                    parents[edge.node] = u;
+                    priorityQueue.add(edge.node);
                 }
             }
         }
 
-        for (Node node: buttons) {
-            System.out.println("Droga do wierzchołka " + node.number + " wynosi: " + node.distance);
+        for (int i = 0; i < size; i++) {
+            System.out.println("Droga do wierzchołka " + i + " wynosi: " + distance[i]);
             //System.out.println(node.prev);
         }
 
-        // Do testów
-        return buttons[size - 1].distance;
+        return distance;
     }
 
-    public void showPath(Graph graph, Node start) {
-        Node curr = start;
-        Node next;
-        while (curr.number != graph.chosen) {
-            curr.setId("path");
-            next = curr.prev;
-            for (Edge edge: graph.neighbours[curr.number]) {
-                if (edge.node == next.number) {
-                    edge.setId("path");
-                    for (Edge innerEdge: graph.neighbours[next.number]) {
-                        if (innerEdge.node == curr.number) {
-                            innerEdge.setId("path");
-                            break;
-                        }
-                    }
-                    break;
+
+    public static void showPath(Graph graph, int start, Node[] buttons, HashMap<GraphEdge, Edge> pickEdge) {
+        int curr = start;
+        int next;
+        while (curr != graph.chosen) {
+            buttons[curr].setId("path");
+            next = parents[curr];
+            for (GraphEdge edge: graph.neighbours[curr]) {
+                if (edge.node == next) {
+                    pickEdge.get(edge).setId("path");
                 }
             }
             curr = next;
         }
-
     }
 }

@@ -5,16 +5,11 @@ import javafx.scene.text.Font;
 
 public class Edge extends Label {
 
-    int node;
-    double wage;
+    int from, to;
 
-    Edge (int node, double wage) {
-        this.node = node;
-        this.wage = wage;
-        this.setId("edge");
-    }
-
-    public void setSize(double length, double width) {
+    Edge(int from, int to, double length, double width) {
+        this.from = from;
+        this.to = to;
         this.setFont(new Font(width));
         this.setPrefSize(length, width);
         this.setMaxSize(length, width);

@@ -11,57 +11,41 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.testfx.api.FxToolkit;
 
 import java.io.FileNotFoundException;
 import java.util.Objects;
 
-public class DijkstraTest extends Application {
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("GUI.fxml")));
-            Scene scene = new Scene(root);
-            String css = Objects.requireNonNull(this.getClass().getResource("style.css")).toExternalForm();
-            scene.getStylesheets().add(css);
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Before
-    public void setUp () throws Exception {
-    }
-
-    @After
-    public void tearDown () throws Exception {
-        FxToolkit.hideStage();
-        //release(new KeyCode[]{});
-        //release(new MouseButton[]{});
-    }
+public class DijkstraTest {
 
     @Test
-    public void dijkstra_coherentGraph_correctPath() throws FileNotFoundException {
+    public void dijkstra_coherentGraph1_correctPath() throws FileNotFoundException {
 
         //Given
         Files f = new Files();
         Graph graph = f.read("src/test/test_graphs/coherentGraph1");
-        Node[] buttons = new Node[graph.getSize()];
-        Dijkstra dijkstra = new Dijkstra();
 
-        for (int i = 0; i < graph.getSize(); i++) {
-            buttons[i] = new Node(i);
-        }
 
         //When
-        double expectedDistance = 9.0;
+        double[] expectedDistance = {0.0, 11.0, 23.0, 24.0, 24.0, 24.0, 3.0, 15.0, 20.0, 26.0, 29.0, 34.0, 15.0, 20.0, 23.0, 25.0, 28.0, 37.0, 29.0, 27.0, 24.0, 33.0, 34.0, 44.0, 34.0, 35.0, 39.0, 40.0, 43.0, 55.0, 38.0, 35.0, 44.0, 46., 50.0, 54.0};
 
         //Then
-        double result = dijkstra.dijkstra(graph, buttons);
-        Assertions.assertEquals(result, expectedDistance);
+        double[] result = Dijkstra.dijkstra(graph);
+        Assertions.assertArrayEquals(expectedDistance, result);
+    }
+
+    @Test
+    public void dijkstra_coherentGraph2_correctPath() throws FileNotFoundException {
+
+        //Given
+        Files f = new Files();
+        Graph graph = f.read("src/test/test_graphs/coherentGraph2");
+
+        //when
+        double[] expectedDistance = {0.0, 8.0, 14.0, 22.0, 23.0, 3.0, 8.0, 14.0, 22.0, 24.0, 10.0, 12.0, 16.0, 17.0, 20.0, 13.0, 12.0, 13.0, 14.0, 18.0};
+
+        //Then
+        double[] result = Dijkstra.dijkstra(graph);
+        Assertions.assertArrayEquals(expectedDistance, result);
     }
 
 }

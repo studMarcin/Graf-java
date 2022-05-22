@@ -14,6 +14,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 
 public class Controller {
@@ -38,10 +39,13 @@ public class Controller {
     GridPane nodes;
     Graph graph;
     Node[] buttons;
+    // Chyba do wyjebania
+    Edge[][] edges;
+
+    HashMap<GraphEdge, Edge> pickEdge;
 
     // Roboczo 0 - nic, 1 - dijsktra, 2 - BFS
     int algorithm;
-    Dijkstra dijkstra;
 
     public void gen(ActionEvent e){
         int c = 6, w = 10;
@@ -60,6 +64,7 @@ public class Controller {
             massages.setText("Nieprawidłowe wagi");
         }
         //wywoluje generacje graf
+        pickEdge = new HashMap<>();
         graph = new Graph(w, c);
         Generation.generate(graph, min, max, cohesionLevel);
         graph.printGraph();
@@ -92,6 +97,7 @@ public class Controller {
 
     public void select(ActionEvent e){
         //wywoluje wybiweranie
+        pickEdge = new HashMap<>();
         FileChooser fileChooser = new FileChooser();
         Files f = new Files();
         Graph g = null;
@@ -135,16 +141,28 @@ public class Controller {
                 buttons[index].setOnAction(this::test);
                 buttons[index].setId("node");
                 nodes.add(buttons[index], j, i);
-                for (Edge edge: graph.neighbours[index]) {
+                for (GraphEdge edge: graph.neighbours[index]) {
                     if (edge.node == index + 1) {
-                        edge.setSize(buttonSize, edgeWidth);
-                        nodes.add(edge, j + 1, i);
-                        GridPane.setValignment(edge, VPos.CENTER);
+                        pickEdge.put(edge, new Edge(index, index + 1, buttonSize, edgeWidth));
+                        for (GraphEdge innerEdge: graph.neighbours[index + 1]) {
+                            if (innerEdge.node == index) {
+                                pickEdge.put(innerEdge, pickEdge.get(edge));
+                            }
+                        }
+                        pickEdge.get(edge).setId("edge");
+                        nodes.add(pickEdge.get(edge), j + 1, i);
+                        GridPane.setValignment(pickEdge.get(edge), VPos.CENTER);
                     }
                     else if (edge.node == index + cols) {
-                        edge.setSize(edgeWidth, buttonSize);
-                        nodes.add(edge, j, i + 1);
-                        GridPane.setHalignment(edge, HPos.CENTER);
+                        pickEdge.put(edge, new Edge(index, index + cols, edgeWidth, buttonSize));
+                        for (GraphEdge innerEdge: graph.neighbours[index + cols]) {
+                            if (innerEdge.node == index) {
+                                pickEdge.put(innerEdge, pickEdge.get(edge));
+                            }
+                        }
+                        pickEdge.get(edge).setId("edge");
+                        nodes.add(pickEdge.get(edge), j, i + 1);
+                        GridPane.setHalignment(pickEdge.get(edge), HPos.CENTER);
                     }
                 }
                 index++;
@@ -155,8 +173,8 @@ public class Controller {
 
     private void clearGraph() {
         for (int i = 0; i < graph.getSize(); i++) {
-            for (Edge edge: graph.neighbours[i]) {
-                edge.setId("edge");
+            for (javafx.scene.Node node: nodes.getChildren()) {
+                node.setId("edge");
             }
         }
 
@@ -167,22 +185,21 @@ public class Controller {
 
     public void test(ActionEvent e) {
         // Wypisuje się każde połączenie z wierzchołka na który kliknęliśmy na konsolę
-        for (Edge edge: graph.neighbours[((Node)e.getSource()).number]) {
+        for (GraphEdge edge: graph.neighbours[((Node)e.getSource()).number]) {
             System.out.print(edge.node + ": " + edge.wage + " ");
         }
         System.out.println();
 
         if (algorithm == 1) {
-            dijkstra = new Dijkstra();
             algorithm = 2;
             graph.chosen = ((Node)e.getSource()).number;
             ((Node)e.getSource()).setId("chosen");
-            dijkstra.dijkstra(graph, buttons);
+            Dijkstra.dijkstra(graph);
             return;
         }
 
         if (algorithm == 2) {
-            dijkstra.showPath(graph, (Node)e.getSource());
+            Dijkstra.showPath(graph, ((Node)e.getSource()).number, buttons, pickEdge);
         }
     }
 

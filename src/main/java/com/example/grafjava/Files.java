@@ -32,7 +32,7 @@ public class Files {
 
             if(pom.length() != 0) {
                 for (int j = 0; j<edges_num; j++) {
-                    Edge e = new Edge(linereader.nextInt(),linereader.nextDouble());
+                    GraphEdge e = new GraphEdge(linereader.nextInt(),linereader.nextDouble());
                     g.neighbours[i].add(e);
                 }
             }
@@ -47,7 +47,7 @@ public class Files {
         PrintWriter writer = new PrintWriter(fw);
         writer.printf("%d %d\n",g.rows, g.cols);
         for(int i=0; i<g.rows*g.cols;i++){
-            for(Edge e : g.neighbours[i]){
+            for(GraphEdge e : g.neighbours[i]){
                 String str = new String();
                 writer.printf(str.format(Locale.US, "%d: %f ", e.node, e.wage));
             }
