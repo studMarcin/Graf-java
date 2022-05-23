@@ -73,7 +73,14 @@ public class Controller {
 
     public void bfs(ActionEvent e){
         //wywoluje bfs
+        BFS bfs = new BFS();
         massages.setText("Uruchamiam BFS");
+        if(bfs.BFS(graph, 1)){
+            massages.setText("Graf jest spójny");
+        }
+        else{
+            massages.setText("Graf jest niespójny");
+        }
     }
 
     public void dijsktra(ActionEvent e){
