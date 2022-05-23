@@ -17,6 +17,12 @@ public class Node extends Button implements Comparable<Node>{
         prev = null;
     }
 
+    Node(int number) {
+        this.number = number;
+        distance = Double.POSITIVE_INFINITY;
+        prev = null;
+    }
+
     @Override
     public int compareTo(Node o) {
         return o.distance > distance ? 0 : 1;
