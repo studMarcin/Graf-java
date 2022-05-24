@@ -3,7 +3,8 @@ package com.example.grafjava;
 import java.util.LinkedList;
 
 public class BFS {
-    public boolean BFS(Graph g, int node){
+    public boolean BFS(Graph g, int node, Node[] buttons){
+        GraphMenager gm = new GraphMenager();
         int size = g.cols *g.rows;
         int n;
         int[] color = new int[size];
@@ -24,6 +25,7 @@ public class BFS {
             color[n] = 2;
         }
         for(int i = 0; i<size;i++){
+            gm.setColor(buttons[i], 14);
             if (color[i] != 2) {
                 return false;
             }
