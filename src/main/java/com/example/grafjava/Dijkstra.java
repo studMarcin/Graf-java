@@ -2,9 +2,7 @@ package com.example.grafjava;
 
 import javafx.scene.layout.GridPane;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Dijkstra {
 
@@ -58,16 +56,29 @@ public class Dijkstra {
         return distance;
     }
 
+    public static double colorDistance(Graph graph, Node[] buttons){
+        double max = distance[0];
+        GraphMenager gm = new GraphMenager();
+        for(Double d : distance){
+            if(d>max){
+                max = d;
+            }
+        }
+        for(int i = 0; i<graph.rows* graph.cols;i++){
+            gm.setColor(buttons[i],distance[i],max);
+        }
+        return max;
+    }
 
     public static void showPath(Graph graph, int start, Node[] buttons, HashMap<GraphEdge, Edge> pickEdge) {
         int curr = start;
         int next;
         while (curr != graph.chosen) {
-            buttons[curr].setId("path");
+            buttons[curr].setStyle("-fx-background-color: #444444");
             next = parents[curr];
             for (GraphEdge edge: graph.neighbours[curr]) {
                 if (edge.node == next) {
-                    pickEdge.get(edge).setId("path");
+                    pickEdge.get(edge).setStyle("-fx-background-color: #444444");
                 }
             }
             curr = next;

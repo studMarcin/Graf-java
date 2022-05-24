@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="864.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.grafjava.Controller">
@@ -51,5 +52,8 @@
       </Label>
       <Slider fx:id="cohesionSlider" blockIncrement="0.01" layoutX="307.0" layoutY="45.0" max="1.0" value="1.0" />
       <AnchorPane fx:id="graphPane" layoutX="71.0" layoutY="195.0" maxHeight="560.0" maxWidth="560.0" prefHeight="560.0" prefWidth="560.0" />
+      <Pane fx:id="scale" layoutX="14.0" layoutY="195.0" prefHeight="597.0" prefWidth="15.0" />
+      <Label layoutX="34.0" layoutY="767.0" prefHeight="25.0" prefWidth="15.0" text="0" />
+      <Label fx:id="maxw" layoutX="34.0" layoutY="193.0" prefHeight="27.0" prefWidth="34.0" />
    </children>
 </AnchorPane>

@@ -22,6 +22,8 @@ public class Controller {
     @FXML
     Label massages;
     @FXML
+    Label maxw;
+    @FXML
     TextField columnsNum;
     @FXML
     TextField rowsNum;
@@ -161,7 +163,7 @@ public class Controller {
                         pickEdge.get(edge).setId("edge");
                         nodes.add(pickEdge.get(edge), j + 1, i);
                         GridPane.setValignment(pickEdge.get(edge), VPos.CENTER);
-                        gm.setColor(pickEdge.get(edge),edge.wage,max);
+                        gm.setColor(pickEdge.get(edge),edge.wage,max,min);
                     }
                     else if (edge.node == index + cols) {
                         pickEdge.put(edge, new Edge(index, index + cols, edgeWidth, buttonSize));
@@ -170,7 +172,7 @@ public class Controller {
                                 pickEdge.put(innerEdge, pickEdge.get(edge));
                             }
                         }
-                        gm.setColor(pickEdge.get(edge),edge.wage,max);
+                        gm.setColor(pickEdge.get(edge),edge.wage,max,min);
                         pickEdge.get(edge).setId("edge");
                         nodes.add(pickEdge.get(edge), j, i + 1);
                         GridPane.setHalignment(pickEdge.get(edge), HPos.CENTER);
@@ -206,6 +208,8 @@ public class Controller {
             graph.chosen = ((Node)e.getSource()).number;
             ((Node)e.getSource()).setId("chosen");
             Dijkstra.dijkstra(graph);
+            double maximum =  Dijkstra.colorDistance(graph,buttons);
+            maxw.setText(Double.toString((int)(Math.ceil(maximum))));
             return;
         }
 
