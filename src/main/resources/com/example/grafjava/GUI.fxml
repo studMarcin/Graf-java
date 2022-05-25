@@ -32,15 +32,15 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="minWeigth" layoutX="183.0" layoutY="41.0" prefHeight="26.0" prefWidth="34.0" promptText="0" />
-      <TextField fx:id="maxWeigth" layoutX="252.0" layoutY="41.0" prefHeight="26.0" prefWidth="34.0" promptText="1" />
+      <TextField fx:id="minWeight" layoutX="183.0" layoutY="41.0" prefHeight="26.0" prefWidth="34.0" promptText="0" />
+      <TextField fx:id="maxWeight" layoutX="252.0" layoutY="41.0" prefHeight="26.0" prefWidth="34.0" promptText="1" />
       <Button fx:id="genButton" layoutX="468.0" layoutY="18.0" mnemonicParsing="false" onAction="#gen" prefHeight="27.0" prefWidth="70.0" text="Generuj" />
       <Button fx:id="bfsButton" layoutX="468.0" layoutY="71.0" mnemonicParsing="false" onAction="#bfs" prefHeight="27.0" prefWidth="70.0" text="BFS" />
       <Button fx:id="dijkstraButton" layoutX="572.0" layoutY="18.0" mnemonicParsing="false" onAction="#dijsktra" prefHeight="27.0" prefWidth="70.0" text="Dijkstra" />
       <Button fx:id="saveButton" layoutX="572.0" layoutY="71.0" mnemonicParsing="false" onAction="#save" prefHeight="27.0" prefWidth="70.0" text="Zapisz" />
       <Button layoutX="53.0" layoutY="76.0" mnemonicParsing="false" onAction="#select" prefHeight="27.0" prefWidth="70.0" text="Wybierz" />
       <Label fx:id="pathToFile" layoutX="123.0" layoutY="76.0" prefHeight="27.0" prefWidth="301.0" style="-fx-background-color: #dedede;" />
-      <Label fx:id="massages" layoutX="71.0" layoutY="124.0" prefHeight="50.0" prefWidth="560.0" style="-fx-background-color: #dedede;" text="Komunikaty" textAlignment="CENTER">
+      <Label fx:id="messages" layoutX="71.0" layoutY="124.0" prefHeight="50.0" prefWidth="560.0" style="-fx-background-color: #dedede;" text="Komunikaty" textAlignment="CENTER">
          <font>
             <Font size="24.0" />
          </font>

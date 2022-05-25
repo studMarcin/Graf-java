@@ -57,20 +57,24 @@ public class Dijkstra {
     }
 
     public static double colorDistance(Graph graph, Node[] buttons){
-        double max = distance[0];
+        double max = 0;
         GraphMenager gm = new GraphMenager();
         for(Double d : distance){
-            if(d>max){
+            if(d>max && !d.equals(Double.POSITIVE_INFINITY)){
                 max = d;
             }
         }
         for(int i = 0; i<graph.rows* graph.cols;i++){
+            if (distance[i] > max) {
+                buttons[i].setStyle("-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-radius: 144px");
+                continue;
+            }
             gm.setColor(buttons[i],distance[i],max);
         }
         return max;
     }
 
-    public static void showPath(Graph graph, int start, Node[] buttons, HashMap<GraphEdge, Edge> pickEdge) {
+    public static double showPath(Graph graph, int start, Node[] buttons, HashMap<GraphEdge, Edge> pickEdge) {
         int curr = start;
         int next;
         while (curr != graph.chosen) {
@@ -83,5 +87,6 @@ public class Dijkstra {
             }
             curr = next;
         }
+        return distance[start];
     }
 }

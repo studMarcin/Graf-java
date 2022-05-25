@@ -8,7 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -20,35 +22,33 @@ import java.util.InputMismatchException;
 public class Controller {
 
     @FXML
-    Label massages;
+    private Label messages;
     @FXML
-    Label maxw;
+    private Label maxw;
     @FXML
-    TextField columnsNum;
+    private TextField columnsNum;
     @FXML
-    TextField rowsNum;
+    private TextField rowsNum;
     @FXML
-    TextField minWeigth;
+    private TextField minWeight;
     @FXML
-    TextField maxWeigth;
+    private TextField maxWeight;
     @FXML
-    Label pathToFile;
+    private Label pathToFile;
     @FXML
-    AnchorPane graphPane;
+    private AnchorPane graphPane;
     @FXML
-    Slider cohesionSlider;
+    private Slider cohesionSlider;
 
     GridPane nodes;
     Graph graph;
     Node[] buttons;
-    // Chyba do wyjebania
-    Edge[][] edges;
 
     HashMap<GraphEdge, Edge> pickEdge;
 
     // Roboczo 0 - nic, 1 - dijsktra, 2 - BFS
-    int algorithm;
-    double min = 0,  max = 1;
+    private int algorithm;
+    private double min = 0,  max = 1;
 
 
     public void gen(ActionEvent e){
@@ -57,14 +57,22 @@ public class Controller {
         try {
             c = Integer.parseInt(columnsNum.getText());
             w = Integer.parseInt(rowsNum.getText());
+            if (c <= 0 || w <= 0) {
+                throw new NumberFormatException();
+            }
         }catch(NumberFormatException er){
-            massages.setText("Nieprawidłowe wymiary");
+            messages.setText("Nieprawidłowe wymiary");
+            return;
         }
         try{
-            min = Double.parseDouble(minWeigth.getText());
-            max = Double.parseDouble(maxWeigth.getText());
+            min = Double.parseDouble(minWeight.getText());
+            max = Double.parseDouble(maxWeight.getText());
+            if (min < 0 || max < 0) {
+                throw new NumberFormatException();
+            }
         }catch(NumberFormatException er){
-            massages.setText("Nieprawidłowe wagi");
+            messages.setText("Nieprawidłowe wagi");
+            return;
         }
         //wywoluje generacje graf
         pickEdge = new HashMap<>();
@@ -77,18 +85,18 @@ public class Controller {
     public void bfs(ActionEvent e){
         //wywoluje bfs
         BFS bfs = new BFS();
-        massages.setText("Uruchamiam BFS");
+        messages.setText("Uruchamiam BFS");
         if(bfs.BFS(graph, 1, buttons)){
-            massages.setText("Graf jest spójny");
+            messages.setText("Graf jest spójny");
         }
         else{
-            massages.setText("Graf jest niespójny");
+            messages.setText("Graf jest niespójny");
         }
     }
 
     public void dijsktra(ActionEvent e){
         //wywoluje dijkstre
-        massages.setText("Wybierz wierzchołek początkowy");
+        messages.setText("Wybierz wierzchołek początkowy");
         algorithm = 1;
         clearGraph();
     }
@@ -100,9 +108,9 @@ public class Controller {
             File selectedFile = fileChooser.showOpenDialog(null);
             f.save(graph, selectedFile.getPath());
         }catch(IOException er){
-            massages.setText("Wybierz plik na zapis");
+            messages.setText("Wybierz plik na zapis");
         }
-        massages.setText("Zapisuje graf");
+        messages.setText("Zapisuje graf");
     }
 
     public void select(ActionEvent e){
@@ -110,18 +118,17 @@ public class Controller {
         pickEdge = new HashMap<>();
         FileChooser fileChooser = new FileChooser();
         Files f = new Files();
-        Graph g = null;
         try {
             File selectedFile = fileChooser.showOpenDialog(null);
             pathToFile.setText(selectedFile.getPath());
             graph = f.read(selectedFile.getPath());
             graph.printGraph();
             showGraph(graph.rows, graph.cols);
-            massages.setText("");
+            messages.setText("");
         }catch(InputMismatchException er){
-            massages.setText("Nieprawidłowy format grafu");
+            messages.setText("Nieprawidłowy format grafu");
         }catch(FileNotFoundException er){
-            massages.setText("Wybierz plik z grafem");
+            messages.setText("Wybierz plik z grafem");
         }
 
     }
@@ -149,12 +156,12 @@ public class Controller {
         for (int i = 0; i < rows * 2 - 1; i += 2) {
             for (int j = 0; j < cols * 2 - 1; j += 2) {
                 buttons[index] = new Node(buttonSize, index);
-                buttons[index].setOnAction(this::test);
+                buttons[index].setOnAction(this::buttonAction);
                 buttons[index].setId("node");
                 nodes.add(buttons[index], j, i);
                 for (GraphEdge edge: graph.neighbours[index]) {
-                    if (edge.node == index + 1) {
-                        pickEdge.put(edge, new Edge(index, index + 1, buttonSize, edgeWidth));
+                    if (edge.node == index + 1 && cols != 1) {
+                        pickEdge.put(edge, new Edge(buttonSize / 2, edgeWidth / 2));
                         for (GraphEdge innerEdge: graph.neighbours[index + 1]) {
                             if (innerEdge.node == index) {
                                 pickEdge.put(innerEdge, pickEdge.get(edge));
@@ -166,7 +173,7 @@ public class Controller {
                         gm.setColor(pickEdge.get(edge),edge.wage,max,min);
                     }
                     else if (edge.node == index + cols) {
-                        pickEdge.put(edge, new Edge(index, index + cols, edgeWidth, buttonSize));
+                        pickEdge.put(edge, new Edge(edgeWidth / 2, buttonSize / 2));
                         for (GraphEdge innerEdge: graph.neighbours[index + cols]) {
                             if (innerEdge.node == index) {
                                 pickEdge.put(innerEdge, pickEdge.get(edge));
@@ -179,24 +186,26 @@ public class Controller {
                     }
                 }
                 index++;
+                if (j == 0) {
+                    nodes.getColumnConstraints().add(new ColumnConstraints(buttonSize));
+                    nodes.getColumnConstraints().add(new ColumnConstraints(buttonSize / 2));
+                }
             }
+            nodes.getRowConstraints().add(new RowConstraints(buttonSize));
+            nodes.getRowConstraints().add(new RowConstraints(buttonSize / 2));
         }
         graphPane.getChildren().addAll(nodes);
     }
 
     private void clearGraph() {
-        for (int i = 0; i < graph.getSize(); i++) {
-            for (javafx.scene.Node node: nodes.getChildren()) {
-                node.setId("edge");
-            }
-        }
 
         for (Node node: buttons) {
             node.setId("Node");
+            node.setStyle("");
         }
     }
 
-    public void test(ActionEvent e) {
+    private void buttonAction(ActionEvent e) {
         // Wypisuje się każde połączenie z wierzchołka na który kliknęliśmy na konsolę
         for (GraphEdge edge: graph.neighbours[((Node)e.getSource()).number]) {
             System.out.print(edge.node + ": " + edge.wage + " ");
@@ -210,11 +219,19 @@ public class Controller {
             Dijkstra.dijkstra(graph);
             double maximum =  Dijkstra.colorDistance(graph,buttons);
             maxw.setText(Double.toString((int)(Math.ceil(maximum))));
+            messages.setText("Wybierz kolejny wierzchołek");
             return;
         }
 
         if (algorithm == 2) {
-            Dijkstra.showPath(graph, ((Node)e.getSource()).number, buttons, pickEdge);
+            try {
+                Node currentNode = (Node) e.getSource();
+                double currentDistance = Dijkstra.showPath(graph, currentNode.number, buttons, pickEdge);
+                messages.setText("Droga z wierzchołka " + currentNode.number + " do " + graph.chosen + ": " + currentDistance);
+            }
+            catch(ArrayIndexOutOfBoundsException exception) {
+                messages.setText("Brak połączenia pomiędzy wierzchołkami!");
+            }
         }
     }
 

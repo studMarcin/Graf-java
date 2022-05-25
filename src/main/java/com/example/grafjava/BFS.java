@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 public class BFS {
     public boolean BFS(Graph g, int node, Node[] buttons) {
         GraphMenager gm = new GraphMenager();
-        int size = g.cols * g.rows;
+        int size = g.getSize();
         int n;
         int[] color = new int[size];
         LinkedList<Integer> q = new LinkedList<Integer>();
@@ -26,6 +26,9 @@ public class BFS {
             }
             buttons[n].setStyle("-fx-background-color: #000000");
             color[n] = 2;
+        }
+        for (int col: color) {
+            if (col != 2) return false;
         }
         return true;
     }
