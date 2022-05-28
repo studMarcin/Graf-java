@@ -63,10 +63,6 @@ public class Dijkstra {
             }
         }
         for(int i = 0; i<graph.rows* graph.cols;i++){
-            if (distance[i] > max) {
-                buttons[i].setStyle("-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-radius: 144px");
-                continue;
-            }
             gm.setColor(buttons[i],distance[i],max);
         }
         return max;

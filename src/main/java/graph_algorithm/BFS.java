@@ -1,18 +1,22 @@
 package graph_algorithm;
 
 import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
+
+
 
 public class BFS {
-    public boolean BFS(Graph g, int node, Node[] buttons) {
+
+    int[] color;
+
+    public boolean BFS(Graph g) {
         GraphMenager gm = new GraphMenager();
-        int size = g.getSize();
+        int size = g.cols * g.rows;
         int n;
-        int[] color = new int[size];
+        color = new int[size];
+        int node = g.chosen;
         LinkedList<Integer> q = new LinkedList<Integer>();
         for (int i = 0; i < size; i++) {
             color[i] = 0;
-            buttons[i].setStyle("-fx-background-color: #FFFFFF");
         }
         color[node] = 1;
         q.push(node);
@@ -24,12 +28,24 @@ public class BFS {
                     q.push(x.node);
                 }
             }
-            buttons[n].setStyle("-fx-background-color: #000000");
             color[n] = 2;
         }
-        for (int col: color) {
-            if (col != 2) return false;
+        for(int i = 0; i<size; i++){
+            if(color[i]!= 2){
+                return false;
+            }
         }
         return true;
+    }
+    public void colorBFS(Graph g, Node[] buttons){
+        for(int i = 0; i<g.rows*g.cols;i++){
+            if(color[i] == 2){
+                buttons[i].setStyle("-fx-background-color: #000000");
+            }
+            else{
+                buttons[i].setStyle("-fx-background-color: #FFFFFF");
+            }
+        }
+        buttons[g.chosen].setStyle("-fx-background-color: #666666");
     }
 }

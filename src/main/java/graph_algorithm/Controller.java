@@ -1,9 +1,10 @@
-package com.example.grafjava;
+package graph_algorithm;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -39,6 +40,12 @@ public class Controller {
     private AnchorPane graphPane;
     @FXML
     private Slider cohesionSlider;
+    @FXML
+    private Button bfsButton;
+    @FXML
+    private Button dijkstraButton;
+    @FXML
+    private Button saveButton;
 
     GridPane nodes;
     Graph graph;
@@ -47,12 +54,12 @@ public class Controller {
     HashMap<GraphEdge, Edge> pickEdge;
 
     // Roboczo 0 - nic, 1 - dijsktra, 2 - BFS
-    private int algorithm;
-    private double min = 0,  max = 1;
+    int algorithm;
+    double min, max ;
 
 
     public void gen(ActionEvent e){
-        int c = 6, w = 10;
+        int c, w;
         double cohesionLevel = cohesionSlider.getValue();
         try {
             c = Integer.parseInt(columnsNum.getText());
@@ -74,24 +81,28 @@ public class Controller {
             messages.setText("Nieprawidłowe wagi");
             return;
         }
-        //wywoluje generacje graf
-        pickEdge = new HashMap<>();
-        graph = new Graph(w, c);
-        Generation.generate(graph, min, max, cohesionLevel);
-        graph.printGraph();
-        showGraph(w, c);
+        try {
+            c = Integer.parseInt(columnsNum.getText());
+            w = Integer.parseInt(rowsNum.getText());
+            graph = new Graph(w, c);
+            algorithm = 0;
+            pickEdge = new HashMap<>();
+            Generation.generate(graph, min, max, cohesionLevel);
+            graph.printGraph();
+            showGraph(w, c);
+            bfsButton.setDisable(false);
+            dijkstraButton.setDisable(false);
+            saveButton.setDisable(false);
+            messages.setText("");
+        }catch(NumberFormatException er){
+            messages.setText("Nieprawidłowe wymiary");
+        }
     }
 
     public void bfs(ActionEvent e){
         //wywoluje bfs
-        BFS bfs = new BFS();
-        messages.setText("Uruchamiam BFS");
-        if(bfs.BFS(graph, 1, buttons)){
-            messages.setText("Graf jest spójny");
-        }
-        else{
-            messages.setText("Graf jest niespójny");
-        }
+        messages.setText("wybierz wierzchołek");
+        algorithm = 2;
     }
 
     public void dijsktra(ActionEvent e){
@@ -130,7 +141,9 @@ public class Controller {
         }catch(FileNotFoundException er){
             messages.setText("Wybierz plik z grafem");
         }
-
+        bfsButton.setDisable(false);
+        dijkstraButton.setDisable(false);
+        saveButton.setDisable(false);
     }
 
     public void showGraph(int rows, int cols) {
@@ -156,7 +169,7 @@ public class Controller {
         for (int i = 0; i < rows * 2 - 1; i += 2) {
             for (int j = 0; j < cols * 2 - 1; j += 2) {
                 buttons[index] = new Node(buttonSize, index);
-                buttons[index].setOnAction(this::buttonAction);
+                buttons[index].setOnAction(this::algoManager);
                 buttons[index].setId("node");
                 nodes.add(buttons[index], j, i);
                 for (GraphEdge edge: graph.neighbours[index]) {
@@ -205,34 +218,37 @@ public class Controller {
         }
     }
 
-    private void buttonAction(ActionEvent e) {
-        // Wypisuje się każde połączenie z wierzchołka na który kliknęliśmy na konsolę
-        for (GraphEdge edge: graph.neighbours[((Node)e.getSource()).number]) {
-            System.out.print(edge.node + ": " + edge.wage + " ");
-        }
-        System.out.println();
+    public void algoManager(ActionEvent e) {
 
-        if (algorithm == 1) {
-            algorithm = 2;
-            graph.chosen = ((Node)e.getSource()).number;
-            ((Node)e.getSource()).setId("chosen");
-            Dijkstra.dijkstra(graph);
-            double maximum =  Dijkstra.colorDistance(graph,buttons);
-            maxw.setText(Double.toString((int)(Math.ceil(maximum))));
-            messages.setText("Wybierz kolejny wierzchołek");
-            return;
-        }
-
-        if (algorithm == 2) {
-            try {
-                Node currentNode = (Node) e.getSource();
-                double currentDistance = Dijkstra.showPath(graph, currentNode.number, buttons, pickEdge);
-                messages.setText("Droga z wierzchołka " + currentNode.number + " do " + graph.chosen + ": " + currentDistance);
+        switch (algorithm) {
+            case 1 -> {
+                algorithm = 3;
+                graph.chosen = ((Node) e.getSource()).number;
+                ((Node) e.getSource()).setId("chosen");
+                Dijkstra.dijkstra(graph);
+                double maximum = Dijkstra.colorDistance(graph, buttons);
+                maxw.setText(Integer.toString((int) (Math.ceil(maximum))));
+                messages.setText("Wybierz kolejny wierzchołek");
             }
-            catch(ArrayIndexOutOfBoundsException exception) {
-                messages.setText("Brak połączenia pomiędzy wierzchołkami!");
+            case 2 -> {
+                graph.chosen = ((Node) e.getSource()).number;
+                BFS bfs = new BFS();
+                if (bfs.BFS(graph)) {
+                    messages.setText("Graf jest spójny");
+                } else {
+                    messages.setText("Graf jest niespójny");
+                }
+                bfs.colorBFS(graph, buttons);
+            }
+            case 3 -> {
+                try {
+                    Node currentNode = (Node) e.getSource();
+                    double currentDistance = Dijkstra.showPath(graph, currentNode.number, buttons, pickEdge);
+                    messages.setText("Droga z wierzchołka " + currentNode.number + " do " + graph.chosen + ": " +  currentDistance);
+                } catch (ArrayIndexOutOfBoundsException exception) {
+                    messages.setText("Brak połączenia pomiędzy wierzchołkami!");
+                }
             }
         }
     }
-
 }
