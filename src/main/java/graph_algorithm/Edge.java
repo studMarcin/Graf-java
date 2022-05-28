@@ -1,4 +1,4 @@
-package com.example.grafjava;
+package graph_algorithm;
 
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;

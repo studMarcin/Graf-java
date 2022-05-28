@@ -1,19 +1,9 @@
-package com.example.grafjava;
+package graph_algorithm;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.stage.Stage;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
-import java.util.Objects;
 
 public class DijkstraTest {
 

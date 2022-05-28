@@ -1,6 +1,5 @@
-package com.example.grafjava;
+package graph_algorithm;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Graph {

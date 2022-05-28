@@ -1,6 +1,4 @@
-package com.example.grafjava;
-
-import javafx.scene.layout.GridPane;
+package graph_algorithm;
 
 import java.util.*;
 

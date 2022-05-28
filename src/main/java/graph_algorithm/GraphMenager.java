@@ -1,4 +1,4 @@
-package com.example.grafjava;
+package graph_algorithm;
 
 
 import static java.lang.Math.floor;
