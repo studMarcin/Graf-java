@@ -67,6 +67,7 @@ public class Controller {
             massages.setText("Nieprawidłowe wagi");
         }
         //wywoluje generacje graf
+        algorithm = 0;
         pickEdge = new HashMap<>();
         graph = new Graph(w, c);
         Generation.generate(graph, min, max, cohesionLevel);
@@ -76,14 +77,8 @@ public class Controller {
 
     public void bfs(ActionEvent e){
         //wywoluje bfs
-        BFS bfs = new BFS();
-        massages.setText("Uruchamiam BFS");
-        if(bfs.BFS(graph, 1, buttons)){
-            massages.setText("Graf jest spójny");
-        }
-        else{
-            massages.setText("Graf jest niespójny");
-        }
+        massages.setText("wybierz wierzchołek");
+        algorithm = 2;
     }
 
     public void dijsktra(ActionEvent e){
@@ -149,7 +144,7 @@ public class Controller {
         for (int i = 0; i < rows * 2 - 1; i += 2) {
             for (int j = 0; j < cols * 2 - 1; j += 2) {
                 buttons[index] = new Node(buttonSize, index);
-                buttons[index].setOnAction(this::test);
+                buttons[index].setOnAction(this::algoMenager);
                 buttons[index].setId("node");
                 nodes.add(buttons[index], j, i);
                 for (GraphEdge edge: graph.neighbours[index]) {
@@ -196,26 +191,32 @@ public class Controller {
         }
     }
 
-    public void test(ActionEvent e) {
-        // Wypisuje się każde połączenie z wierzchołka na który kliknęliśmy na konsolę
-        for (GraphEdge edge: graph.neighbours[((Node)e.getSource()).number]) {
-            System.out.print(edge.node + ": " + edge.wage + " ");
-        }
-        System.out.println();
+    public void algoMenager(ActionEvent e) {
 
-        if (algorithm == 1) {
-            algorithm = 2;
-            graph.chosen = ((Node)e.getSource()).number;
-            ((Node)e.getSource()).setId("chosen");
-            Dijkstra.dijkstra(graph);
-            double maximum =  Dijkstra.colorDistance(graph,buttons);
-            maxw.setText(Double.toString((int)(Math.ceil(maximum))));
-            return;
-        }
+        switch(algorithm) {
+            case 1:
+                algorithm = 3;
+                graph.chosen = ((Node) e.getSource()).number;
+                ((Node) e.getSource()).setId("chosen");
+                Dijkstra.dijkstra(graph);
+                double maximum = Dijkstra.colorDistance(graph, buttons);
+                maxw.setText(Integer.toString((int) (Math.ceil(maximum))));
+                return;
 
-        if (algorithm == 2) {
-            Dijkstra.showPath(graph, ((Node)e.getSource()).number, buttons, pickEdge);
+            case 2:
+                graph.chosen = ((Node) e.getSource()).number;
+                BFS bfs = new BFS();
+                if (bfs.BFS(graph)) {
+                    massages.setText("Graf jest spójny");
+                } else {
+                    massages.setText("Graf jest niespójny");
+                }
+                bfs.colorBFS(graph,buttons);
+                break;
+
+            case 3:
+                Dijkstra.showPath(graph, ((Node) e.getSource()).number, buttons, pickEdge);
+                break;
         }
     }
-
 }

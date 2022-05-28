@@ -57,10 +57,10 @@ public class Dijkstra {
     }
 
     public static double colorDistance(Graph graph, Node[] buttons){
-        double max = distance[0];
+        double max = 0;
         GraphMenager gm = new GraphMenager();
         for(Double d : distance){
-            if(d>max){
+            if(d>max && d!=Double.POSITIVE_INFINITY){
                 max = d;
             }
         }

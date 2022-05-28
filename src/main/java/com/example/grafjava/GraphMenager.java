@@ -1,6 +1,8 @@
 package com.example.grafjava;
 
 
+import javafx.event.ActionEvent;
+
 import static java.lang.Math.floor;
 
 public class GraphMenager {
@@ -13,8 +15,13 @@ public class GraphMenager {
         edge.setStyle("-fx-background-color: hsb(" + c +", 100%, 100%)");
     }
     public void setColor(Node node, double distance, double max){
-        int c;
-        c =(int)floor(50 + (distance/max)*309);
-        node.setStyle("-fx-background-color: hsb("+ c+ ", 100%, 100%)");
+        if(distance == Double.POSITIVE_INFINITY){
+            node.setStyle("-fx-background-color: BLACK");
+        }
+        else {
+            int c;
+            c = (int) floor(50 + (distance / max) * 309);
+            node.setStyle("-fx-background-color: hsb(" + c + ", 100%, 100%)");
+        }
     }
 }

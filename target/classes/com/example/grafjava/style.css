@@ -21,3 +21,7 @@ Node {
 #chosen {
     -fx-background-color: #7D3C98;
 }
+
+#scale{
+    -fx-background-image: url(colorscale.png);
+}
