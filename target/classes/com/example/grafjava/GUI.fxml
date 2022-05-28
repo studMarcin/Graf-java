@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="864.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graph_algorithm.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="864.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.grafjava.Controller">
    <children>
       <TextField fx:id="columnsNum" layoutX="54.0" layoutY="40.0" prefHeight="25.0" prefWidth="34.0" promptText="6" />
       <TextField fx:id="rowsNum" layoutX="123.0" layoutY="40.0" prefHeight="26.0" prefWidth="34.0" promptText="10" />
@@ -35,9 +35,9 @@
       <TextField fx:id="minWeight" layoutX="183.0" layoutY="41.0" prefHeight="26.0" prefWidth="34.0" promptText="0" />
       <TextField fx:id="maxWeight" layoutX="252.0" layoutY="41.0" prefHeight="26.0" prefWidth="34.0" promptText="1" />
       <Button fx:id="genButton" layoutX="468.0" layoutY="18.0" mnemonicParsing="false" onAction="#gen" prefHeight="27.0" prefWidth="70.0" text="Generuj" />
-      <Button fx:id="bfsButton" disable="true" layoutX="468.0" layoutY="71.0" mnemonicParsing="false" onAction="#bfs" prefHeight="27.0" prefWidth="70.0" text="BFS" />
-      <Button fx:id="dijkstraButton" disable="true" layoutX="572.0" layoutY="18.0" mnemonicParsing="false" onAction="#dijsktra" prefHeight="27.0" prefWidth="70.0" text="Dijkstra" />
-      <Button fx:id="saveButton" disable="true" layoutX="572.0" layoutY="71.0" mnemonicParsing="false" onAction="#save" prefHeight="27.0" prefWidth="70.0" text="Zapisz" />
+      <Button fx:id="bfsButton" layoutX="468.0" layoutY="71.0" mnemonicParsing="false" onAction="#bfs" prefHeight="27.0" prefWidth="70.0" text="BFS" />
+      <Button fx:id="dijkstraButton" layoutX="572.0" layoutY="18.0" mnemonicParsing="false" onAction="#dijsktra" prefHeight="27.0" prefWidth="70.0" text="Dijkstra" />
+      <Button fx:id="saveButton" layoutX="572.0" layoutY="71.0" mnemonicParsing="false" onAction="#save" prefHeight="27.0" prefWidth="70.0" text="Zapisz" />
       <Button layoutX="53.0" layoutY="76.0" mnemonicParsing="false" onAction="#select" prefHeight="27.0" prefWidth="70.0" text="Wybierz" />
       <Label fx:id="pathToFile" layoutX="123.0" layoutY="76.0" prefHeight="27.0" prefWidth="301.0" style="-fx-background-color: #dedede;" />
       <Label fx:id="messages" layoutX="71.0" layoutY="124.0" prefHeight="50.0" prefWidth="560.0" style="-fx-background-color: #dedede;" text="Komunikaty" textAlignment="CENTER">

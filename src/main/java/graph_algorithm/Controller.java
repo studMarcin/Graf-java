@@ -9,7 +9,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -21,35 +23,33 @@ import java.util.InputMismatchException;
 public class Controller {
 
     @FXML
-    Label massages;
+    private Label messages;
     @FXML
-    Label maxw;
+    private Label maxw;
     @FXML
-    TextField columnsNum;
+    private TextField columnsNum;
     @FXML
-    TextField rowsNum;
+    private TextField rowsNum;
     @FXML
-    TextField minWeigth;
+    private TextField minWeight;
     @FXML
-    TextField maxWeigth;
+    private TextField maxWeight;
     @FXML
-    Label pathToFile;
+    private Label pathToFile;
     @FXML
-    AnchorPane graphPane;
+    private AnchorPane graphPane;
     @FXML
-    Slider cohesionSlider;
+    private Slider cohesionSlider;
     @FXML
-    Button bfsButton;
+    private Button bfsButton;
     @FXML
-    Button dijkstraButton;
+    private Button dijkstraButton;
     @FXML
-    Button saveButton;
+    private Button saveButton;
 
     GridPane nodes;
     Graph graph;
     Node[] buttons;
-    // Chyba do wyjebania
-    Edge[][] edges;
 
     HashMap<GraphEdge, Edge> pickEdge;
 
@@ -61,11 +61,25 @@ public class Controller {
     public void gen(ActionEvent e){
         int c, w;
         double cohesionLevel = cohesionSlider.getValue();
-        try{
-            min = Double.parseDouble(minWeigth.getText());
-            max = Double.parseDouble(maxWeigth.getText());
+        try {
+            c = Integer.parseInt(columnsNum.getText());
+            w = Integer.parseInt(rowsNum.getText());
+            if (c <= 0 || w <= 0) {
+                throw new NumberFormatException();
+            }
         }catch(NumberFormatException er){
-            massages.setText("Nieprawidłowe wagi");
+            messages.setText("Nieprawidłowe wymiary");
+            return;
+        }
+        try{
+            min = Double.parseDouble(minWeight.getText());
+            max = Double.parseDouble(maxWeight.getText());
+            if (min < 0 || max < 0) {
+                throw new NumberFormatException();
+            }
+        }catch(NumberFormatException er){
+            messages.setText("Nieprawidłowe wagi");
+            return;
         }
         try {
             c = Integer.parseInt(columnsNum.getText());
@@ -93,7 +107,7 @@ public class Controller {
 
     public void dijsktra(ActionEvent e){
         //wywoluje dijkstre
-        massages.setText("Wybierz wierzchołek początkowy");
+        messages.setText("Wybierz wierzchołek początkowy");
         algorithm = 1;
         clearGraph();
     }
@@ -105,9 +119,9 @@ public class Controller {
             File selectedFile = fileChooser.showOpenDialog(null);
             f.save(graph, selectedFile.getPath());
         }catch(IOException er){
-            massages.setText("Wybierz plik na zapis");
+            messages.setText("Wybierz plik na zapis");
         }
-        massages.setText("Zapisuje graf");
+        messages.setText("Zapisuje graf");
     }
 
     public void select(ActionEvent e){
@@ -115,7 +129,6 @@ public class Controller {
         pickEdge = new HashMap<>();
         FileChooser fileChooser = new FileChooser();
         Files f = new Files();
-        Graph g = null;
         try {
             File selectedFile = fileChooser.showOpenDialog(null);
             pathToFile.setText(selectedFile.getPath());
@@ -160,8 +173,8 @@ public class Controller {
                 buttons[index].setId("node");
                 nodes.add(buttons[index], j, i);
                 for (GraphEdge edge: graph.neighbours[index]) {
-                    if (edge.node == index + 1) {
-                        pickEdge.put(edge, new Edge(index, index + 1, buttonSize, edgeWidth));
+                    if (edge.node == index + 1 && cols != 1) {
+                        pickEdge.put(edge, new Edge(buttonSize / 2, edgeWidth / 2));
                         for (GraphEdge innerEdge: graph.neighbours[index + 1]) {
                             if (innerEdge.node == index) {
                                 pickEdge.put(innerEdge, pickEdge.get(edge));
@@ -173,7 +186,7 @@ public class Controller {
                         gm.setColor(pickEdge.get(edge),edge.wage,max,min);
                     }
                     else if (edge.node == index + cols) {
-                        pickEdge.put(edge, new Edge(index, index + cols, edgeWidth, buttonSize));
+                        pickEdge.put(edge, new Edge(edgeWidth / 2, buttonSize / 2));
                         for (GraphEdge innerEdge: graph.neighbours[index + cols]) {
                             if (innerEdge.node == index) {
                                 pickEdge.put(innerEdge, pickEdge.get(edge));
@@ -186,20 +199,22 @@ public class Controller {
                     }
                 }
                 index++;
+                if (j == 0) {
+                    nodes.getColumnConstraints().add(new ColumnConstraints(buttonSize));
+                    nodes.getColumnConstraints().add(new ColumnConstraints(buttonSize / 2));
+                }
             }
+            nodes.getRowConstraints().add(new RowConstraints(buttonSize));
+            nodes.getRowConstraints().add(new RowConstraints(buttonSize / 2));
         }
         graphPane.getChildren().addAll(nodes);
     }
 
     private void clearGraph() {
-        for (int i = 0; i < graph.getSize(); i++) {
-            for (javafx.scene.Node node: nodes.getChildren()) {
-                node.setId("edge");
-            }
-        }
 
         for (Node node: buttons) {
             node.setId("Node");
+            node.setStyle("");
         }
     }
 

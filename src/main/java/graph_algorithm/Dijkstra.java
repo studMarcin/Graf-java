@@ -58,7 +58,7 @@ public class Dijkstra {
         double max = 0;
         GraphMenager gm = new GraphMenager();
         for(Double d : distance){
-            if(d>max && d!=Double.POSITIVE_INFINITY){
+            if(d>max && !d.equals(Double.POSITIVE_INFINITY)){
                 max = d;
             }
         }
@@ -68,7 +68,7 @@ public class Dijkstra {
         return max;
     }
 
-    public static void showPath(Graph graph, int start, Node[] buttons, HashMap<GraphEdge, Edge> pickEdge) {
+    public static double showPath(Graph graph, int start, Node[] buttons, HashMap<GraphEdge, Edge> pickEdge) {
         int curr = start;
         int next;
         while (curr != graph.chosen) {
@@ -81,5 +81,6 @@ public class Dijkstra {
             }
             curr = next;
         }
+        return distance[start];
     }
 }
