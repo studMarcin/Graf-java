@@ -1,9 +1,10 @@
-package com.example.grafjava;
+package graph_algorithm;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -37,6 +38,12 @@ public class Controller {
     AnchorPane graphPane;
     @FXML
     Slider cohesionSlider;
+    @FXML
+    Button bfsButton;
+    @FXML
+    Button dijkstraButton;
+    @FXML
+    Button saveButton;
 
     GridPane nodes;
     Graph graph;
@@ -48,31 +55,34 @@ public class Controller {
 
     // Roboczo 0 - nic, 1 - dijsktra, 2 - BFS
     int algorithm;
-    double min = 0,  max = 1;
+    double min, max ;
 
 
     public void gen(ActionEvent e){
-        int c = 6, w = 10;
+        int c, w;
         double cohesionLevel = cohesionSlider.getValue();
-        try {
-            c = Integer.parseInt(columnsNum.getText());
-            w = Integer.parseInt(rowsNum.getText());
-        }catch(NumberFormatException er){
-            massages.setText("Nieprawidłowe wymiary");
-        }
         try{
             min = Double.parseDouble(minWeigth.getText());
             max = Double.parseDouble(maxWeigth.getText());
         }catch(NumberFormatException er){
             massages.setText("Nieprawidłowe wagi");
         }
-        //wywoluje generacje graf
-        algorithm = 0;
-        pickEdge = new HashMap<>();
-        graph = new Graph(w, c);
-        Generation.generate(graph, min, max, cohesionLevel);
-        graph.printGraph();
-        showGraph(w, c);
+        try {
+            c = Integer.parseInt(columnsNum.getText());
+            w = Integer.parseInt(rowsNum.getText());
+            graph = new Graph(w, c);
+            algorithm = 0;
+            pickEdge = new HashMap<>();
+            Generation.generate(graph, min, max, cohesionLevel);
+            graph.printGraph();
+            showGraph(w, c);
+            bfsButton.setDisable(false);
+            dijkstraButton.setDisable(false);
+            saveButton.setDisable(false);
+            massages.setText("");
+        }catch(NumberFormatException er){
+            massages.setText("Nieprawidłowe wymiary");
+        }
     }
 
     public void bfs(ActionEvent e){
@@ -118,7 +128,9 @@ public class Controller {
         }catch(FileNotFoundException er){
             massages.setText("Wybierz plik z grafem");
         }
-
+        bfsButton.setDisable(false);
+        dijkstraButton.setDisable(false);
+        saveButton.setDisable(false);
     }
 
     public void showGraph(int rows, int cols) {
@@ -144,7 +156,7 @@ public class Controller {
         for (int i = 0; i < rows * 2 - 1; i += 2) {
             for (int j = 0; j < cols * 2 - 1; j += 2) {
                 buttons[index] = new Node(buttonSize, index);
-                buttons[index].setOnAction(this::algoMenager);
+                buttons[index].setOnAction(this::algoManager);
                 buttons[index].setId("node");
                 nodes.add(buttons[index], j, i);
                 for (GraphEdge edge: graph.neighbours[index]) {
@@ -191,19 +203,18 @@ public class Controller {
         }
     }
 
-    public void algoMenager(ActionEvent e) {
+    public void algoManager(ActionEvent e) {
 
-        switch(algorithm) {
-            case 1:
+        switch (algorithm) {
+            case 1 -> {
                 algorithm = 3;
                 graph.chosen = ((Node) e.getSource()).number;
                 ((Node) e.getSource()).setId("chosen");
                 Dijkstra.dijkstra(graph);
                 double maximum = Dijkstra.colorDistance(graph, buttons);
                 maxw.setText(Integer.toString((int) (Math.ceil(maximum))));
-                return;
-
-            case 2:
+            }
+            case 2 -> {
                 graph.chosen = ((Node) e.getSource()).number;
                 BFS bfs = new BFS();
                 if (bfs.BFS(graph)) {
@@ -211,12 +222,9 @@ public class Controller {
                 } else {
                     massages.setText("Graf jest niespójny");
                 }
-                bfs.colorBFS(graph,buttons);
-                break;
-
-            case 3:
-                Dijkstra.showPath(graph, ((Node) e.getSource()).number, buttons, pickEdge);
-                break;
+                bfs.colorBFS(graph, buttons);
+            }
+            case 3 -> Dijkstra.showPath(graph, ((Node) e.getSource()).number, buttons, pickEdge);
         }
     }
 }

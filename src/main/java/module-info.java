@@ -6,6 +6,6 @@ module com.example.grafjava {
     requires junit;
 
 
-    opens com.example.grafjava to javafx.fxml;
-    exports com.example.grafjava;
+    opens graph_algorithm to javafx.fxml;
+    exports graph_algorithm;
 }

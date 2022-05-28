@@ -1,4 +1,4 @@
-package com.example.grafjava;
+package graph_algorithm;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

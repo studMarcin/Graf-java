@@ -1,4 +1,4 @@
-package com.example.grafjava;
+package graph_algorithm;
 
 public class GraphEdge {
     int node;
