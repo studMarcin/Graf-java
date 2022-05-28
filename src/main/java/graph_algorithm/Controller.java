@@ -93,15 +93,15 @@ public class Controller {
             bfsButton.setDisable(false);
             dijkstraButton.setDisable(false);
             saveButton.setDisable(false);
-            massages.setText("");
+            messages.setText("");
         }catch(NumberFormatException er){
-            massages.setText("Nieprawidłowe wymiary");
+            messages.setText("Nieprawidłowe wymiary");
         }
     }
 
     public void bfs(ActionEvent e){
         //wywoluje bfs
-        massages.setText("wybierz wierzchołek");
+        messages.setText("wybierz wierzchołek");
         algorithm = 2;
     }
 
@@ -135,11 +135,11 @@ public class Controller {
             graph = f.read(selectedFile.getPath());
             graph.printGraph();
             showGraph(graph.rows, graph.cols);
-            massages.setText("");
+            messages.setText("");
         }catch(InputMismatchException er){
-            massages.setText("Nieprawidłowy format grafu");
+            messages.setText("Nieprawidłowy format grafu");
         }catch(FileNotFoundException er){
-            massages.setText("Wybierz plik z grafem");
+            messages.setText("Wybierz plik z grafem");
         }
         bfsButton.setDisable(false);
         dijkstraButton.setDisable(false);
@@ -228,18 +228,27 @@ public class Controller {
                 Dijkstra.dijkstra(graph);
                 double maximum = Dijkstra.colorDistance(graph, buttons);
                 maxw.setText(Integer.toString((int) (Math.ceil(maximum))));
+                messages.setText("Wybierz kolejny wierzchołek");
             }
             case 2 -> {
                 graph.chosen = ((Node) e.getSource()).number;
                 BFS bfs = new BFS();
                 if (bfs.BFS(graph)) {
-                    massages.setText("Graf jest spójny");
+                    messages.setText("Graf jest spójny");
                 } else {
-                    massages.setText("Graf jest niespójny");
+                    messages.setText("Graf jest niespójny");
                 }
                 bfs.colorBFS(graph, buttons);
             }
-            case 3 -> Dijkstra.showPath(graph, ((Node) e.getSource()).number, buttons, pickEdge);
+            case 3 -> {
+                try {
+                    Node currentNode = (Node) e.getSource();
+                    double currentDistance = Dijkstra.showPath(graph, currentNode.number, buttons, pickEdge);
+                    messages.setText("Droga z wierzchołka " + currentNode.number + " do " + graph.chosen + ": " +  currentDistance);
+                } catch (ArrayIndexOutOfBoundsException exception) {
+                    messages.setText("Brak połączenia pomiędzy wierzchołkami!");
+                }
+            }
         }
     }
 }
