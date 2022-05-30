@@ -38,4 +38,19 @@ public class DijkstraTest {
         Assertions.assertArrayEquals(expectedDistance, result);
     }
 
+    @Test
+    public void dijkstra_notCoherentGraph_correctPath() throws FileNotFoundException {
+
+        //Given
+        Files f = new Files();
+        Graph graph = f.read("src/test/test_graphs/notCoherentGraph1");
+
+        //when
+        double[] expectedDistance = {0.0, Double.POSITIVE_INFINITY, 4.0, 6.0, 10.0, 13.0};
+
+        //Then
+        double[] result = Dijkstra.dijkstra(graph);
+        Assertions.assertArrayEquals(expectedDistance, result);
+    }
+
 }

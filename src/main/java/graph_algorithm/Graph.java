@@ -6,7 +6,7 @@ public class Graph {
 
     LinkedList<GraphEdge>[] neighbours;
     int rows, cols;
-    int chosen;
+    int chosen = 0;
 
     Graph(int rows, int cols) {
         neighbours = new LinkedList[rows * cols];

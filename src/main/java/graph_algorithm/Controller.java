@@ -81,9 +81,10 @@ public class Controller {
             messages.setText("Nieprawidłowe wagi");
             return;
         }
-        try {
-            c = Integer.parseInt(columnsNum.getText());
-            w = Integer.parseInt(rowsNum.getText());
+        if (w * c > 10000) {
+            messages.setText("Wymiary grafu są zbyt duże!");
+        }
+        else {
             graph = new Graph(w, c);
             algorithm = 0;
             pickEdge = new HashMap<>();
@@ -94,8 +95,6 @@ public class Controller {
             dijkstraButton.setDisable(false);
             saveButton.setDisable(false);
             messages.setText("");
-        }catch(NumberFormatException er){
-            messages.setText("Nieprawidłowe wymiary");
         }
     }
 
