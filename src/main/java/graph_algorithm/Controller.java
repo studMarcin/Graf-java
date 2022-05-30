@@ -117,7 +117,7 @@ public class Controller {
         try {
             File selectedFile = fileChooser.showOpenDialog(null);
             f.save(graph, selectedFile.getPath());
-        }catch(IOException er){
+        }catch(IOException|RuntimeException er){
             messages.setText("Wybierz plik na zapis");
         }
         messages.setText("Zapisuje graf");

@@ -1,4 +1,4 @@
-/*package com.example.grafjava;
+package graph_algorithm;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,12 +15,13 @@ public class BFSTest {
         Graph graph = null;
         Files f = new Files();
         try {
-            graph = f.read("C:\\Users\\Kowalski\\IdeaProjects\\Graf-java\\src\\test\\test_graphs\\BFSGraph1.txt");
+            graph = f.read("src/test/test_graphs/BFSGraph1.txt");
+            graph.chosen = 2;
         }catch(FileNotFoundException e){
             ;
         }
         BFS bfs = new BFS();
-        Assert.assertTrue(bfs.BFS(graph,2));
+        Assert.assertTrue(bfs.BFS(graph));
     }
 
     @Test
@@ -28,16 +29,13 @@ public class BFSTest {
         Graph graph = null;
         Files f = new Files();
         try {
-            graph = f.read("C:\\Users\\Kowalski\\IdeaProjects\\Graf-java\\src\\test\\test_graphs\\BFSGraph2Unconected.txt");
+            graph = f.read("src/test/test_graphs/BFSGraph2Unconected.txt");
+            graph.chosen = 2;
         }catch(FileNotFoundException e){
             ;
         }
         BFS bfs = new BFS();
-        Assert.assertFalse(bfs.BFS(graph,2));
+        Assert.assertFalse(bfs.BFS(graph));
     }
 
-    @Test
-    public void ColorTest(){
-
-    }
-}*/
+}
